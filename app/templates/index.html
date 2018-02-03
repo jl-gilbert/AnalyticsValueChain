@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="static/basic.css" rel="stylesheet">
+</head>
+
+<body>
+    <h3>
+         <a href = "{{ url_for('index') }}">Predicted Stats For Next Game</a>
+    </h3>
+
+    <hr/>
+    <table>
+         <thead>
+            <tr>
+               <th>Points</th>
+               <th>Rebounds</th>
+               <th>Assist</th>
+            </tr>
+         </thead>
+
+         <tbody>
+               <tr>
+                  <td>{{ predicted_stats[0] }}</td>
+                  <td>{{ predicted_stats[1] }}</td>
+                  <td>{{ predicted_stats[2] }}</td>
+               </tr>
+         </tbody>
+      </table>
+
+</body>
+</html>
