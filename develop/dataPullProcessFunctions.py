@@ -96,7 +96,7 @@ class schedule:
         self.season = season
         game_list = []
         #call API for Cavs' season schedule
-        data = send_request_schedule(season,'cleveland-cavaliers',None).json()
+        data = send_request_schedule(season,'cleveland-cavaliers',until_date).json()
         #add each game to game list
         for game in data['fullgameschedule']['gameentry']:
             if game['homeTeam']['Abbreviation'] == 'CLE':
@@ -149,6 +149,9 @@ class schedule:
                 game['season_2pt_pct'] = 0
                 game['season_3pt_pct'] = 0
                 game['season_ft_pct'] = 0
+                game['season_2ptpg'] = 0
+                game['season_3ptpg'] = 0
+                game['season_ftpg'] = 0
                 game['season_rpg'] = 0
                 game['season_apg'] = 0
                 game['season_plusminpg'] = 0
@@ -166,6 +169,9 @@ class schedule:
                 game['season_2pt_pct'] = game['season_2ptm'] / game['season_2pta']
                 game['season_3pt_pct'] = game['season_3ptm'] / game['season_3pta']
                 game['season_ft_pct'] = game['season_ftm'] / game['season_fta']
+                game['season_2ptpg'] = game['season_2ptm'] / game_index
+                game['season_3ptpg'] = game['season_3ptm'] / game_index
+                game['season_ftpg'] = game['season_ftm'] / game_index
                 game['season_rpg'] = game['season_rbs'] / game_index
                 game['season_apg'] = game['season_ast'] / game_index
                 game['season_plusminpg'] = game['season_plusminus'] / game_index
@@ -291,7 +297,16 @@ class schedule:
         
     def calc_opp_efficiency(self):
         for game in self.games:
-            game['opp_def_eff'] = (game['PTSA']/(game['FGAA'] - game['OREBA'] + game['TOVA'] + 0.4*game['FTAA']))*100
-            game['opp_off_eff'] = (game['PTS']/(game['FGA'] - game['OREB'] + game['TOV'] + 0.4*game['FTA']))*100
+            game_index = self.games.index(game)
+            if game_index == 0:
+                game['opp_def_eff'] = 0
+                game['opp_off_eff'] = 0
+            else:    
+                if game['PTSA'] == 0:
+                    game['opp_def_eff'] = 0
+                    game['opp_off_eff'] = 0
+                else:
+                    game['opp_def_eff'] = (game['PTSA']/(game['FGAA'] - game['OREBA'] + game['TOVA'] + 0.4*game['FTAA']))*100
+                    game['opp_off_eff'] = (game['PTS']/(game['FGA'] - game['OREB'] + game['TOV'] + 0.4*game['FTA']))*100
         
         
