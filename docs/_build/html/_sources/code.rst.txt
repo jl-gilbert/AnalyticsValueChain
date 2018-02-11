@@ -3,14 +3,17 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to lbj_predictions's documentation!
+Data Pull from API and Database Creation!
 ===========================================
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:_
-   
-   code
+
+.. automodule:: create_initial_db
+   :members:
+.. automodule:: dataPullProcessFunctions
+   :members:
 
 
 

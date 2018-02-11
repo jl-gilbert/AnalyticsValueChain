@@ -1,0 +1,474 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Data Pull from API and Database Creation! &#8212; lbj_predictions 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to lbj_predictions’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="data-pull-from-api-and-database-creation">
+<h1>Data Pull from API and Database Creation!<a class="headerlink" href="#data-pull-from-api-and-database-creation" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<span class="target" id="module-create_initial_db"></span><dl class="function">
+<dt id="create_initial_db.build_db">
+<code class="descclassname">create_initial_db.</code><code class="descname">build_db</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#create_initial_db.build_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates initial database with historical data.</p>
+<p>Builds database with full data from 2015-2016 and 2016-2017 seasons, as
+well as data up through the day of code execution from the 2017-2018
+season.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<span class="target" id="module-dataPullProcessFunctions"></span><p>Functions and classes for pulling data from API and processing for database</p>
+<p>This module provides functions and a class that can be used for pulling from
+the MySportsFeeds.com API. It has several functions to make API calls for
+various types of responses, as well as some functions for altering Python
+objects into a format suitable for a component of an API call or into a format
+suitable for storage in a database, depending on the case.</p>
+<dl class="function">
+<dt id="dataPullProcessFunctions.date_to_api_format">
+<code class="descclassname">dataPullProcessFunctions.</code><code class="descname">date_to_api_format</code><span class="sig-paren">(</span><em>date</em><span class="sig-paren">)</span><a class="headerlink" href="#dataPullProcessFunctions.date_to_api_format" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to convert date to string as needed by API call</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>date</strong> (<em>datetime.date</em><em>(</em><em></em><em>)</em><em></em>) &#8211; Date to be converted</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">String in format needeed for API call</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">convert (str)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="dataPullProcessFunctions.extract_lbj_stats">
+<code class="descclassname">dataPullProcessFunctions.</code><code class="descname">extract_lbj_stats</code><span class="sig-paren">(</span><em>json_game</em><span class="sig-paren">)</span><a class="headerlink" href="#dataPullProcessFunctions.extract_lbj_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to extract relevant LeBron James stats.</p>
+<p>The dictionary passed to this function is part of the output of the .json()
+method applied to the response object returned by the send_request_lbj()
+function. Before passing to this, that json must be parsed to represent a
+single game, if necessary.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>json_game</strong> (<em>dict</em>) &#8211; dictionary that is an element of the list associated
+with the key &#8216;gamelogs&#8217; of the dict associated with the key
+&#8216;playergamelogs&#8217; of the root json dict obtain by calling the
+.json() method on the output of send_request_lbj</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
+<dt>Dictionary with all required individual stats for</dt>
+<dd>LeBron James for the given game.</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">stats_dict (dict)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="dataPullProcessFunctions.find_opponent_stats">
+<code class="descclassname">dataPullProcessFunctions.</code><code class="descname">find_opponent_stats</code><span class="sig-paren">(</span><em>season</em>, <em>from_date</em>, <em>to_date</em>, <em>starting_values</em>, <em>opponent</em><span class="sig-paren">)</span><a class="headerlink" href="#dataPullProcessFunctions.find_opponent_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to find cumulative stats for an opponent between 2 dates.</p>
+<p>This function is used to...</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>season</strong> (<em>str</em>) &#8211; specifies season of dates, needed for API call.</li>
+<li><strong>from_date</strong> (<em>datetime.date</em><em>(</em><em></em><em>)</em><em></em>) &#8211; gives beginning date of period, presumably
+the date of the last game between opponent and Cavs.</li>
+<li><strong>to_date</strong> (<em>datetime.date</em><em>(</em><em></em><em>)</em><em></em>) &#8211; gives ending date of period, presumably the
+day before the game against the Cavs in question.</li>
+<li><strong>starting_values</strong> (<em>dict</em>) &#8211; dictionary with stats for opponent at start of
+period so the function can add onto them.</li>
+<li><strong>opponent</strong> (<em>str</em>) &#8211; 3 letter abbreviation for opponent, such as &#8216;BOS&#8217;.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
+<dt>the starting values for stats modified by</dt>
+<dd><p class="first last">concatenating stats that happened during the specified period. If
+no games occured for the opponent during the specified timeframe
+the inputed values will be returned to reflect so. This is useful
+for the daily updates that will occur when the app is live.</p>
+</dd>
+</dl>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">starting_values (dict)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="dataPullProcessFunctions.request_opponent_stats">
+<code class="descclassname">dataPullProcessFunctions.</code><code class="descname">request_opponent_stats</code><span class="sig-paren">(</span><em>season</em>, <em>gameID</em><span class="sig-paren">)</span><a class="headerlink" href="#dataPullProcessFunctions.request_opponent_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to call API for a given game. Used to get opponent stats</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>season</strong> (<em>str</em>) &#8211; Season for the stats. Convention is the format as in</li>
+<li><strong>following example</strong> (<em>the</em>) &#8211; &#8216;2015-2016-regular&#8217;</li>
+<li><strong>gameID</strong> (<em>str</em>) &#8211; Game for which the stats are requested. Must in format</li>
+<li><strong>such as '20151027-CLE-CHI'.</strong> (<em>'date-awayteam-hometeam'</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Response from API call</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">response (requests.models.Response)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="dataPullProcessFunctions.schedule">
+<em class="property">class </em><code class="descclassname">dataPullProcessFunctions.</code><code class="descname">schedule</code><span class="sig-paren">(</span><em>season</em>, <em>until_date</em><span class="sig-paren">)</span><a class="headerlink" href="#dataPullProcessFunctions.schedule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class containing all needed data for a given season.</p>
+<dl class="attribute">
+<dt id="dataPullProcessFunctions.schedule.season">
+<code class="descname">season</code><a class="headerlink" href="#dataPullProcessFunctions.schedule.season" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; string representing the season for which this object
+contains data.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="dataPullProcessFunctions.schedule.games">
+<code class="descname">games</code><a class="headerlink" href="#dataPullProcessFunctions.schedule.games" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>list</em> &#8211; list of dictionaries, each dictionary is for a particular
+game.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dataPullProcessFunctions.schedule.calc_opp_efficiency">
+<code class="descname">calc_opp_efficiency</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dataPullProcessFunctions.schedule.calc_opp_efficiency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds opponents&#8217; defensive and offensive efficiency ratings to data.</p>
+<p>Modifies dicts inside games attribute so that they include each
+opponent&#8217;s season offensive and defensive efficieny ratings at the
+beginning of the particular game, based on the opponent&#8217;s cumulative
+statistics as added by find_stats_since_last_meeting method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="dataPullProcessFunctions.schedule.find_days_rest">
+<code class="descname">find_days_rest</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dataPullProcessFunctions.schedule.find_days_rest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds days of rest to data.</p>
+<p>Modifies dicts inside games attribute so that they include the number
+of days of rest the Cavaliers had before each game. The first game uses
+0 for this value, which will be irrelevant because that game will not
+be used in model training or validation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="dataPullProcessFunctions.schedule.find_last_game_per_opponent">
+<code class="descname">find_last_game_per_opponent</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dataPullProcessFunctions.schedule.find_last_game_per_opponent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds date the Cavs last played each opponent to the data.</p>
+<p>Modifies dicts inside games attribute so that they include the date of
+the Cavs&#8217; last meeting with the opponent of each game. If the teams
+have not yet met in the given season, the first day of the season is
+used.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="dataPullProcessFunctions.schedule.find_lebron_stats_all_games">
+<code class="descname">find_lebron_stats_all_games</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dataPullProcessFunctions.schedule.find_lebron_stats_all_games" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds LeBron James individual game stats to data.</p>
+<p>Modifies dicts inside games attribute so that they include LeBron James
+stats for each individual game.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="dataPullProcessFunctions.schedule.find_stats_since_last_meeting">
+<code class="descname">find_stats_since_last_meeting</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dataPullProcessFunctions.schedule.find_stats_since_last_meeting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds opponent team cumulative stats to the data.</p>
+<p>Modifies dicts inside games attribute so that they include each
+opponent team&#8217;s cumulative stats at the point of the beginning of the
+particular game.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="dataPullProcessFunctions.schedule.sum_lebron_season_stats">
+<code class="descname">sum_lebron_season_stats</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dataPullProcessFunctions.schedule.sum_lebron_season_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds LeBron James cumulative stats to data.</p>
+<p>Modifies dicts inside games attribute so that they include LeBron James
+cumulative stats for the season at the point of the beginning of each
+particular game.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="dataPullProcessFunctions.send_request_cavsgame">
+<code class="descclassname">dataPullProcessFunctions.</code><code class="descname">send_request_cavsgame</code><span class="sig-paren">(</span><em>season</em>, <em>date</em><span class="sig-paren">)</span><a class="headerlink" href="#dataPullProcessFunctions.send_request_cavsgame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to call API for Cleveland Cavs game scores.</p>
+<p>This function is used to determine the winner of a Cavs game.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>season</strong> (<em>str</em>) &#8211; Season for the game results.</li>
+<li><strong>daterange</strong> (<em>str</em>) &#8211; Date of the game for which the results are requested.
+Given date must be in form such as &#8216;20151027&#8217; for Oct 27, 2015.
+&#8216;today&#8217; also works.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Response from API call</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">response (requests.models.Response)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="dataPullProcessFunctions.send_request_lbj">
+<code class="descclassname">dataPullProcessFunctions.</code><code class="descname">send_request_lbj</code><span class="sig-paren">(</span><em>season</em>, <em>daterange</em><span class="sig-paren">)</span><a class="headerlink" href="#dataPullProcessFunctions.send_request_lbj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to call API for LeBron James game statistics</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>season</strong> (<em>str</em>) &#8211; Season for the stats. Convention is the format as in
+the following example: &#8216;2015-2016-regular&#8217;</li>
+<li><strong>daterange</strong> (<em>str</em>) &#8211; Dates for which the stats are requested. Given date
+must be in form such as &#8216;20151027&#8217; for Oct 27, 2015. &#8216;today&#8217; also
+works. For range, use &#8216;from-20151027-to-20160401&#8217;. &#8216;until-today&#8217;
+also works. If None object is passed, stats for each game in the
+season are requested.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Response from API call</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">response (requests.models.Response)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="dataPullProcessFunctions.send_request_schedule">
+<code class="descclassname">dataPullProcessFunctions.</code><code class="descname">send_request_schedule</code><span class="sig-paren">(</span><em>season</em>, <em>team</em>, <em>daterange</em><span class="sig-paren">)</span><a class="headerlink" href="#dataPullProcessFunctions.send_request_schedule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to call API for a schedule</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>season</strong> (<em>str</em>) &#8211; Season for the schedule. Convention is the format as in
+the following example: &#8216;2015-2016-regular&#8217;</li>
+<li><strong>team</strong> (<em>str</em>) &#8211; Team for the schedule. Convention is the 3 letter all caps
+abbreviation, such as &#8216;CLE&#8217;</li>
+<li><strong>daterange</strong> (<em>str</em>) &#8211; Dates for which the schedule is requested. Given date
+must be in form such as &#8216;20151027&#8217; for Oct 27, 2015. &#8216;today&#8217; also
+works. For range, use &#8216;from-20151027-to-20160401&#8217;. &#8216;until-today&#8217;
+also works. If None object is passed, full season is requested.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Response from API call</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">response (requests.models.Response)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Data Pull from API and Database Creation!</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to lbj_predictions&#8217;s documentation!</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/code.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Joe Gilbert.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/code.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
