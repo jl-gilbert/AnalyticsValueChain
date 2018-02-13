@@ -46,7 +46,7 @@ def build_db():
             game_stats.pts = game['lbj_pts']
             game_stats.rbs = game['lbj_rbs']
             game_stats.ast = game['lbj_ast']
-            game_stats.DNP = game['DNP']
+            game_stats.lbj_DNP = game['DNP']
         except:
             game_stats.lbj_inactive = True
         db.session.add(game_stats)
@@ -78,7 +78,7 @@ def build_db():
             game_stats.pts = game['lbj_pts']
             game_stats.rbs = game['lbj_rbs']
             game_stats.ast = game['lbj_ast']
-            game_stats.DNP = game['DNP']
+            game_stats.lbj_DNP = game['DNP']
         except:
             game_stats.lbj_inactive = True
         db.session.add(game_stats)
@@ -110,7 +110,7 @@ def build_db():
             game_stats.pts = game['lbj_pts']
             game_stats.rbs = game['lbj_rbs']
             game_stats.ast = game['lbj_ast']
-            game_stats.DNP = game['DNP']
+            game_stats.lbj_DNP = game['DNP']
         except:
             game_stats.lbj_inactive = True
         db.session.add(game_stats)
