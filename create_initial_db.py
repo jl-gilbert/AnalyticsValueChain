@@ -117,5 +117,6 @@ def build_db():
         db.session.commit()
     db.session.close()
 
+
 if __name__ == "__main__":
     build_db()

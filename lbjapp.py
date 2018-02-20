@@ -1,5 +1,6 @@
 from flask import render_template
 from app import app
+from app.models import Game
 
 
 @app.route('/')
@@ -16,4 +17,9 @@ def index():
         rendering (render_template): rendering of web page to display with
             Flask.
     """
-    return render_template('index.html', predicted_stats=[25, 10, 9])
+    return render_template('index.html', next_game=Game.query.order_by(
+            Game.date.desc()).first())
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
