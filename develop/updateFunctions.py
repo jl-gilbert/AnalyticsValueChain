@@ -137,7 +137,8 @@ def opp_stat_update(season, season_start_date, today, opponent):
         'OppWins': 0,
         'OppLosses': 0}
     opponent_stats = dppf.find_opponent_stats(
-            season, season_start_date, today, starting_values, opponent)
+            season, season_start_date, today - timedelta(days=1),
+            starting_values, opponent)
     upcoming_opp_stats = {
         'opp_def_eff': (opponent_stats['PtsAgainst']/(
             opponent_stats[

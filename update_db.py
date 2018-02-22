@@ -16,7 +16,7 @@ def update_db():
     Returns:
         None
     """
-    uf.make_update(datetime.now.date(),
+    uf.make_update(datetime.now().date(),
                    "2017-2018-regular", db)
 
 if __name__ == "__main__":
