@@ -1,8 +1,10 @@
 from app import db
 
+
 class Game(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime, unique=True, nullable=False)
+    season = db.Column(db.String(20), unique=False, nullable=False)
     opponent = db.Column(db.String(3), unique=False, nullable=False)
     home_away = db.Column(db.String(4), unique=False, nullable=False)
     lbj_days_rest = db.Column(db.Integer, unique=False, nullable=False)
@@ -20,6 +22,13 @@ class Game(db.Model):
     pts = db.Column(db.Integer, unique=False, nullable=True)
     rbs = db.Column(db.Integer, unique=False, nullable=True)
     ast = db.Column(db.Integer, unique=False, nullable=True)
-    
+    cavsWins = db.Column(db.Integer, unique=False, nullable=False)
+    cavsLosses = db.Column(db.Integer, unique=False, nullable=False)
+    oppWins = db.Column(db.Integer, unique=False, nullable=False)
+    oppLosses = db.Column(db.Integer, unique=False, nullable=False)
+    lbj_games_missed = db.Column(db.Integer, unique=False, nullable=False)
+    lbj_DNP = db.Column(db.Boolean, unique=False, nullable=True)
+    lbj_inactive = db.Column(db.Boolean, unique=False, nullable=True)
+
     def __repr__(self):
         return '<Game on %r>' % (str(self.date))

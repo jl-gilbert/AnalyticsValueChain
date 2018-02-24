@@ -1,4 +1,5 @@
 *.ipynb
-config.py
+*config.py
 *.pyc
 *.db
+*backup.py

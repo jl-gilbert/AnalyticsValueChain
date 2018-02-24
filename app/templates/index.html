@@ -7,24 +7,28 @@
 
 <body>
     <h3>
-         <a href = "{{ url_for('index') }}">Predicted Stats For Next Game</a>
+         <a href = "{{ url_for('index') }}">Information For Next Game</a>
     </h3>
 
     <hr/>
     <table>
          <thead>
             <tr>
-               <th>Points</th>
-               <th>Rebounds</th>
-               <th>Assist</th>
+               <th>Next Game Date</th>
+			   <th>Home/Away</th>
+               <th>Opponent</th>
+               <th>Opponent Wins</th>
+			   <th>Opponent Loses</th>
             </tr>
          </thead>
 
          <tbody>
                <tr>
-                  <td>{{ predicted_stats[0] }}</td>
-                  <td>{{ predicted_stats[1] }}</td>
-                  <td>{{ predicted_stats[2] }}</td>
+                  <td>{{ next_game.date }}</td>
+                  <td>{{ next_game.home_away }}</td>
+                  <td>{{ next_game.opponent }}</td>
+				  <td>{{ next_game.oppWins }}</td>
+				  <td>{{ next_game.oppLosses }}</td>
                </tr>
          </tbody>
       </table>
