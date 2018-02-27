@@ -2,15 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link href="static/basic.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../static/basic.css">
 </head>
 
 <body>
+	<div class="infobox_class">	
     <h3>
-         <a href = "{{ url_for('index') }}">Information For Next Game</a>
+         <a>Information For Next Game</a>
+		 <div style=font-size: "small">
+			{{ next_game.date }}
+		</div>
     </h3>
 
     <hr/>
+	<div class="cavs_class">
+	Cleveland Cavaliers
+	<div class="record_class">
+	{{ next_game.cavsWins }} - {{ next_game.cavsLosses }}
+	</div>
+	</div>
+	<div class="opponent_class">
+	{{ next_game.opponent }}
+	<div class="record_class">
+	{{ next_game.oppWins }} - {{ next_game.oppLosses }}
+	</div>
+	</div>
+	<hr/>
+<!--
     <table>
          <thead>
             <tr>
@@ -24,14 +42,15 @@
 
          <tbody>
                <tr>
-                  <td>{{ next_game.date }}</td>
-                  <td>{{ next_game.home_away }}</td>
-                  <td>{{ next_game.opponent }}</td>
-				  <td>{{ next_game.oppWins }}</td>
-				  <td>{{ next_game.oppLosses }}</td>
+                  <td class="info_class">{{ next_game.date }}</td>
+                  <td class="info_class">{{ next_game.home_away }}</td>
+                  <td class="info_class">{{ next_game.opponent }}</td>
+				  <td class="info_class">{{ next_game.oppWins }}</td>
+				  <td class="info_class">{{ next_game.oppLosses }}</td>
                </tr>
          </tbody>
       </table>
-
+	  -->
+	</div>
 </body>
 </html>

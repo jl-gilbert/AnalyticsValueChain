@@ -308,7 +308,8 @@ def make_update(today, season, database):
         db (flask_sqlalchemy.SQLAlchemy): database to pull from and write to
 
     Returns:
-        None
+        status (str): string describing type of update made, either
+        "newgameupdate", "updatedstats", or "nogame".
     """
     # pass datetime.now().date() to use today as argument
     # db is database to write to
@@ -345,21 +346,26 @@ def make_update(today, season, database):
                                  lbj_games_missed=new_row['lbj_games_missed'])
             database.session.add(new_row_model)
             database.session.commit()
+            status = "newgameupdate"
+        else:
+            status = "nogame"
         # if the most recent game in the database hasn't occurred yet,
         # we don't need to update Cavs stats,
         # instead we just pull opponent stats again to make sure they are
         # updated to reflect any games
         # the opponent played in the interim
-        else:
-            this_season = datapull[0].season
-            this_season_start = datapull[0].date.date()
-            upcoming_game = datapull[len(datapull) - 1]
-            opponent = upcoming_game.opponent
-            bottom_row_update = opp_stat_update(this_season, this_season_start,
-                                                today, opponent)
-            upcoming_game.opp_def_eff = bottom_row_update['opp_def_eff']
-            upcoming_game.opp_off_eff = bottom_row_update['opp_off_eff']
-            upcoming_game.oppWins = bottom_row_update['OPPW']
-            upcoming_game.oppLosses = bottom_row_update['OPPL']
-            db.session.commit()
+    else:
+        this_season = datapull[0].season
+        this_season_start = datapull[0].date.date()
+        upcoming_game = datapull[len(datapull) - 1]
+        opponent = upcoming_game.opponent
+        bottom_row_update = opp_stat_update(this_season, this_season_start,
+                                            today, opponent)
+        upcoming_game.opp_def_eff = bottom_row_update['opp_def_eff']
+        upcoming_game.opp_off_eff = bottom_row_update['opp_off_eff']
+        upcoming_game.oppWins = bottom_row_update['OPPW']
+        upcoming_game.oppLosses = bottom_row_update['OPPL']
+        db.session.commit()
+        status = "updatedstats"
     database.session.close()
+    return status

@@ -14,6 +14,10 @@ Data Pull from API and Database Creation!
    :members:
 .. automodule:: dataPullProcessFunctions
    :members:
+.. automodule:: update_db
+   :members:
+.. automodule:: updateFunctions
+   :members:
 
 
 

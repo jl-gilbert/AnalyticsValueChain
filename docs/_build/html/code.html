@@ -405,6 +405,225 @@ also works. If None object is passed, full season is requested.</li>
 </table>
 </dd></dl>
 
+<span class="target" id="module-update_db"></span><dl class="function">
+<dt id="update_db.update_db">
+<code class="descclassname">update_db.</code><code class="descname">update_db</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#update_db.update_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to run daily to update db with latest info.</p>
+<p>This function will run functions from updateFunctions.py to add a new row
+to the database if appropriate, or otherwise just update the bottom row. It
+is intended to be executed once per day.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<span class="target" id="module-updateFunctions"></span><p>Functions for executing daily update to database.</p>
+<p>This module provides several functions that execute the required daily update
+to the database reflecting results of any games that were in the database but
+without results, then finding the next upcoming game and adding it to the
+database without results, or just making sure the opponent&#8217;s stats are up to
+date if no Cavaliers games have occurred since the last update.</p>
+<dl class="function">
+<dt id="updateFunctions.find_next_opponent">
+<code class="descclassname">updateFunctions.</code><code class="descname">find_next_opponent</code><span class="sig-paren">(</span><em>season</em>, <em>today</em><span class="sig-paren">)</span><a class="headerlink" href="#updateFunctions.find_next_opponent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to find basic details about the next game on the schedule</p>
+<p>This function finds the next game on the schedule that has not been played
+as of &#8216;today&#8217;.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>today</strong> (<em>datetime.date</em><em>(</em><em></em><em>)</em><em></em>) &#8211; date object, if datetime.now().date() is
+passed, the real today will be used.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
+<dt>dictionary with opponent, date, and home/away</dt>
+<dd>status for next upcoming game. If there is no regular season game
+within the next 15 days, an empty dictionary is returned.</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">next_game_info (dict)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="updateFunctions.full_daily_update">
+<code class="descclassname">updateFunctions.</code><code class="descname">full_daily_update</code><span class="sig-paren">(</span><em>today</em>, <em>datapull</em>, <em>database</em><span class="sig-paren">)</span><a class="headerlink" href="#updateFunctions.full_daily_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to write results of last game and return info on upcoming game</p>
+<p>This function is used when a game has been completed since the last time
+the database updated. It will edit the bottom row in the database to
+include the stats from said completed game. It will then return a
+dictionary of all available info for the next upcoming game so that can
+be written to the database (though this function does not perform that
+write). If there is no game upcoming in the next 15 days to return the info
+for, the function will return a string saying so and also print that string
+to the console.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>today</strong> (<em>datetime.date</em><em>(</em><em></em><em>)</em><em></em>) &#8211; date of &#8216;today&#8217;, or day we are doing update
+for</li>
+<li><strong>datapull</strong> (<em>list</em>) &#8211; the list of app.models.Game objects returned by pull
+from db for full season.</li>
+<li><strong>db</strong> (<em>flask_sqlalchemy.SQLAlchemy</em>) &#8211; database to write the edit to</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
+<dt>dictionary with date, opponent, and home/away status</dt>
+<dd><p class="first last">for next game on the schedule that is not yet in the database. This
+is only returned if there is a new game within the next 15 days</p>
+</dd>
+</dl>
+<p>error_string (str): string returned if there is not a new game</p>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">next_game (dict)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="updateFunctions.make_update">
+<code class="descclassname">updateFunctions.</code><code class="descname">make_update</code><span class="sig-paren">(</span><em>today</em>, <em>season</em>, <em>database</em><span class="sig-paren">)</span><a class="headerlink" href="#updateFunctions.make_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to make required daily update to db.</p>
+<p>This function will, depending on the contents of the bottom row of the
+database, make the type of update needed. If the bottom row contains a
+game that has occurred in the past, this function will fill in the stats
+from that game and add a new row onto the bottom of the database with
+the incomplete stats from the next game on the schedule (those stats will
+be completed when this function is run again after that game happens). If
+there is no upcoming game, this function will still write in the results
+of the last game in the database and commit that change, but do nothing
+else.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>today</strong> (<em>datetime.date</em><em>(</em><em></em><em>)</em><em></em>) &#8211; date of &#8216;today&#8217;, or day we are doing update
+for</li>
+<li><strong>season</strong> (<em>str</em>) &#8211; string representing current season, like &#8216;2017-2018-
+regular&#8217;</li>
+<li><strong>db</strong> (<em>flask_sqlalchemy.SQLAlchemy</em>) &#8211; database to pull from and write to</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="updateFunctions.opp_stat_update">
+<code class="descclassname">updateFunctions.</code><code class="descname">opp_stat_update</code><span class="sig-paren">(</span><em>season</em>, <em>season_start_date</em>, <em>today</em>, <em>opponent</em><span class="sig-paren">)</span><a class="headerlink" href="#updateFunctions.opp_stat_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that provides up-to-date stats for opponent.</p>
+<p>This function will find an opponent&#8217;s wins, losses, offensive efficiency
+rating, and defensive efficiency rating through the season up to the value
+of &#8216;today&#8217; provided.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>season</strong> (<em>str</em>) &#8211; season of the date on which we are updating, like
+&#8216;2017-2018-regular&#8217;</li>
+<li><strong>season_start_date</strong> (<em>datetime.date</em><em>(</em><em></em><em>)</em><em></em>) &#8211; date of the first game of this
+season</li>
+<li><strong>today</strong> (<em>datetime.date</em><em>(</em><em></em><em>)</em><em></em>) &#8211; date of &#8216;today&#8217;, or day we are doing update
+for</li>
+<li><strong>opponent</strong> (<em>str</em>) &#8211; 3 letter abbreviation for opponent whose stats we are
+updating, like &#8216;BOS&#8217;</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
+<dt>dictionary with up-to-date wins, losses,</dt>
+<dd><p class="first last">defensive efficiency rating, and offensive efficiency rating for
+opponent</p>
+</dd>
+</dl>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">upcoming_opp_stats (dict)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="updateFunctions.pull_from_db">
+<code class="descclassname">updateFunctions.</code><code class="descname">pull_from_db</code><span class="sig-paren">(</span><em>season</em><span class="sig-paren">)</span><a class="headerlink" href="#updateFunctions.pull_from_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to pull all data from a given season into workspace.</p>
+<p>This function pulls all data from presumably the current season so that
+it can be used to check the type of update needed and/or for aggregating
+new season-long statistics based on new results.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>season</strong> (<em>str</em>) &#8211; name of season data to pull in, like &#8216;2017-2018-regular&#8217;</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">list of app.models.Game objects</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#dataPullProcessFunctions.schedule.games" title="dataPullProcessFunctions.schedule.games">games</a> (list)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="updateFunctions.reverse_engineer_stats">
+<code class="descclassname">updateFunctions.</code><code class="descname">reverse_engineer_stats</code><span class="sig-paren">(</span><em>games_played</em>, <em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#updateFunctions.reverse_engineer_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function for determining season totals based on data in db</p>
+<p>For the purposes of aggregating with data from new game, this function
+reverse engineers what season totals were before that game.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>games_played</strong> (<em>int</em>) &#8211; number of games LeBron has played this season, for
+the purpose of calculating totals based on per-game figures stored
+in the db</li>
+<li><strong>data</strong> (<em>dict</em>) &#8211; dictionary with season per-game averages and shooting
+percentages, from which season totals can be derived. Must include
+keys: &#8216;rpg&#8217;, &#8216;apg&#8217;, &#8216;plusmin&#8217;, &#8216;2ptm&#8217;, &#8216;3ptm&#8217;, &#8216;ftm&#8217; (all season
+per-game averages), &#8216;2pt_pct&#8217;, &#8216;3pt_pct&#8217;, and &#8216;ft_pct&#8217; (season
+percentages).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">dictionary with season totals for rebounds, assits,
+plus/minus, and 2pt/3pt/ft made and attempted.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">statdict (dict)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <div class="section" id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
