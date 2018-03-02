@@ -129,6 +129,5 @@ def update_predictions_db(update_status):
 
 
 if __name__ == "__main__":
-    # update_status = update_db()
-    update_status = "newgameupdate"
+    update_status = update_db()
     update_predictions_db(update_status)
