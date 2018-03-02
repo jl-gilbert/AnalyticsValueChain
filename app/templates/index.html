@@ -10,13 +10,13 @@
     <h3>
          <a>Information For Next Game</a>
 		 <div style=font-size: "small">
-			{{ next_game.date }}
+			{{ next_game.date.strftime('%m-%d-%Y) }}
 		</div>
     </h3>
 
     <hr/>
 	<div class="cavs_class">
-	Cleveland Cavaliers
+	CLE
 	<div class="record_class">
 	{{ next_game.cavsWins }} - {{ next_game.cavsLosses }}
 	</div>
@@ -27,6 +27,10 @@
 	{{ next_game.oppWins }} - {{ next_game.oppLosses }}
 	</div>
 	</div>
+	<div class="predictions_class">
+	Predicted Points: {{ predictions.predicted_pts }} <br>
+	Predicted Assists: {{ predictions.predicted_ast }} <br>
+	Predicted Rebounds: {{ predictions.predicted_rbs }}
 	<hr/>
 <!--
     <table>

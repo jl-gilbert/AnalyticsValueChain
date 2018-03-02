@@ -12,7 +12,8 @@ body {
 	position: relative;
 	width: auto;
 	vertical-align: middle;
-    background-color: blue;
+    background-color: DarkRed;
+	color: Gold;
 	opacity: 0.8;
     margin: auto;
 }
@@ -22,8 +23,10 @@ body {
 	width: 40%;
 	border-style: solid;
 	border-color: black;
-	border-width: 2 px;
+	border-width: 2px;
 	font-size: large;
+	background-color: Gold;
+	color: Black;
 }
 .opponent_class {
 	position: absolute;
@@ -31,8 +34,10 @@ body {
 	width: 40%;
 	border-style: solid;
 	border-color: black;
-	border-width: 2 px;
+	border-width: 2px;
 	font-size: large;
+	background-color: Gold;
+	color: Black;
 }
 .record_class {
 	font-size: small;
@@ -42,6 +47,20 @@ body {
 	height: 50%;
 	border-style: solid;
 	border-color: black;
-	border-width: 2 px;
-	font-size: 15 px;
+	border-width: 2px;
+	font-size: 15px;
+}
+.predictions_class{
+	position: absolute;
+	left: 25%;
+	right: 25%;
+	width: 50%;
+	top: 200%;
+	border-style: solid;
+	border-color: black;
+	border-width: 2px;
+	font-size: 20px;
+	background-color: white;
+	font-family: "Jokerman";
+	color: Black;
 }
