@@ -8,15 +8,10 @@ Welcome to lbj_predictions's documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:_
+   :caption: Contents:
    
    code
 
 
 
-Indices and tables
-==================
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`

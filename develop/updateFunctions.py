@@ -85,7 +85,7 @@ def reverse_engineer_stats(games_played, data):
 
     Returns:
         statdict (dict): dictionary with season totals for rebounds, assits,
-        plus/minus, and 2pt/3pt/ft made and attempted.
+            plus/minus, and 2pt/3pt/ft made and attempted.
         """
     statdict = {
         'season_rebounds': data['rpg'] * games_played,
@@ -367,5 +367,4 @@ def make_update(today, season, database):
         upcoming_game.oppLosses = bottom_row_update['OPPL']
         db.session.commit()
         status = "updatedstats"
-    database.session.close()
     return status

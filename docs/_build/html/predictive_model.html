@@ -1,0 +1,309 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Training a Predictive Model and Making Predictions &#8212; lbj_predictions 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Creating Database" href="app_execution.html" />
+    <link rel="prev" title="Ingesting Data from the MySportsFeeds API" href="code.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-modelTrainingFunctions">
+<span id="training-a-predictive-model-and-making-predictions"></span><h1>Training a Predictive Model and Making Predictions<a class="headerlink" href="#module-modelTrainingFunctions" title="Permalink to this headline">¶</a></h1>
+<p>Functions for pulling data from database and using it to train and predict.</p>
+<p>This module provides functions and classes for pulling data from the database
+into a pandas dataframe, organizing the data into relevant training data
+and data to be used as predictors for the upcoming game, and finally for
+training the model and using it to make predictions.</p>
+<dl class="function">
+<dt id="modelTrainingFunctions.convert_home_away">
+<code class="descclassname">modelTrainingFunctions.</code><code class="descname">convert_home_away</code><span class="sig-paren">(</span><em>df</em><span class="sig-paren">)</span><a class="headerlink" href="#modelTrainingFunctions.convert_home_away" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts categorical variable into binary numeric.</p>
+<p>This function will replace the &#8220;home/away&#8221; attribute of the dataframe,
+stored in the database as strings, into a binary numeric variable so that
+it can easily be used by the scikit-learn model in model training and
+outcome prediction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>df</strong> (<em>pd.DataFrame</em>) &#8211; pandas dataframe containing the column to be
+converted.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="modelTrainingFunctions.create_training_data">
+<code class="descclassname">modelTrainingFunctions.</code><code class="descname">create_training_data</code><span class="sig-paren">(</span><em>date=datetime.date(2018</em>, <em>3</em>, <em>2)</em><span class="sig-paren">)</span><a class="headerlink" href="#modelTrainingFunctions.create_training_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts the rows that will be useful in training a model.</p>
+<p>The function will extract only the games in which the following conditions
+are met: the opponent had played previous games in the season and thus had
+establish offensive and defensive efficiency ratings to be used as
+predictors, the game has already been completed, and Lebron James played in
+the game.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>date</strong> (<em>datetime.date</em><em>(</em><em></em><em>)</em><em></em>) &#8211; Gives the date up to which we want to use data.
+This defaults to the current day, as we assume we will be making
+a model using all available data to predict the next game. However,
+it can be specified as an earlier date if the user wants to
+reproduce an earlier model.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
+<dt>pandas dataframe containing only the rows</dt>
+<dd>suitable for use in model training.</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">good_rows (pd.DataFrame)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="modelTrainingFunctions.create_upcoming_game">
+<code class="descclassname">modelTrainingFunctions.</code><code class="descname">create_upcoming_game</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modelTrainingFunctions.create_upcoming_game" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates single-row dataframe containing info on the next future game.</p>
+<p>This function will query the games database and return the last row,
+which is the next upcoming game, as a pandas dataframe.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
+<dt>single-row dataframe containing info on the</dt>
+<dd>next upcoming game</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">predict_row (pd.DataFrame)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="modelTrainingFunctions.extract_predictors">
+<code class="descclassname">modelTrainingFunctions.</code><code class="descname">extract_predictors</code><span class="sig-paren">(</span><em>df</em><span class="sig-paren">)</span><a class="headerlink" href="#modelTrainingFunctions.extract_predictors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts the columns needed as predictor variables in the model.</p>
+<p>This function will return a new dataframe that is a slice of the inputed
+dataframe but only containing the columns relevant to prediction of the
+responses.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>df</strong> (<em>pd.DataFrame</em>) &#8211; pandas dataframe to be sliced</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
+<dt>pandas dataframe with only the predictor</dt>
+<dd>columns</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">predictors (pd.DataFrame)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="modelTrainingFunctions.pandas_from_db">
+<code class="descclassname">modelTrainingFunctions.</code><code class="descname">pandas_from_db</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modelTrainingFunctions.pandas_from_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function for putting the entire games table into a pandas dataframe.</p>
+<p>This function queries the game table in the database for all rows and
+places the return into a pandas dataframe.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
+<dt>pandas dataframe containing full contents of game</dt>
+<dd>table from database</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">data (pd.DataFrame)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="modelTrainingFunctions.trained_linear_models">
+<em class="property">class </em><code class="descclassname">modelTrainingFunctions.</code><code class="descname">trained_linear_models</code><span class="sig-paren">(</span><em>date=datetime.date(2018</em>, <em>3</em>, <em>2)</em><span class="sig-paren">)</span><a class="headerlink" href="#modelTrainingFunctions.trained_linear_models" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class containing predictive models and the predictions they yield.</p>
+<p>By default, this class will build models using all past data, but a user
+can also use it to reproduce models made in the past.  To do so, the user
+would pass the date of the game for which reproduced predictions are
+desired into the constructor, then when executing the predict method, pass
+the row from the games table in the database of that game.</p>
+<dl class="attribute">
+<dt id="modelTrainingFunctions.trained_linear_models.pts_model">
+<code class="descname">pts_model</code><a class="headerlink" href="#modelTrainingFunctions.trained_linear_models.pts_model" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>sklearn.linear_model</em> &#8211; scikit-learn trained linear model
+for predicting points.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="modelTrainingFunctions.trained_linear_models.rbs_model">
+<code class="descname">rbs_model</code><a class="headerlink" href="#modelTrainingFunctions.trained_linear_models.rbs_model" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>sklearn.linear_model</em> &#8211; scikit-learn trained linear model
+for predicting rebounds.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="modelTrainingFunctions.trained_linear_models.ast_model">
+<code class="descname">ast_model</code><a class="headerlink" href="#modelTrainingFunctions.trained_linear_models.ast_model" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>sklearn.linear_model</em> &#8211; scikit-learn trained linear model
+for predicting assists.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="modelTrainingFunctions.trained_linear_models.predicted_pts">
+<code class="descname">predicted_pts</code><a class="headerlink" href="#modelTrainingFunctions.trained_linear_models.predicted_pts" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; predicted number of points for specified game</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="modelTrainingFunctions.trained_linear_models.predicted_rbs">
+<code class="descname">predicted_rbs</code><a class="headerlink" href="#modelTrainingFunctions.trained_linear_models.predicted_rbs" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; predicted number of rebounds for specified game</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="modelTrainingFunctions.trained_linear_models.predicted_ast">
+<code class="descname">predicted_ast</code><a class="headerlink" href="#modelTrainingFunctions.trained_linear_models.predicted_ast" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; predicted number of assists for specified game</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="modelTrainingFunctions.trained_linear_models.predicted_game_date">
+<code class="descname">predicted_game_date</code><a class="headerlink" href="#modelTrainingFunctions.trained_linear_models.predicted_game_date" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>datetime.date()</em> &#8211; date of game for which
+predictions are made.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modelTrainingFunctions.trained_linear_models.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><em>predict_game</em><span class="sig-paren">)</span><a class="headerlink" href="#modelTrainingFunctions.trained_linear_models.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to make predictions with supplied game information.</p>
+<p>This method will define the attributes of the trained_linear_models
+object that describe the predictions it makes for a game and the date
+of that game.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>predict_game</strong> (<em>pd.DataFrame</em>) &#8211; single-row pandas dataframe containing
+all columns from the games database in regard to a single game.
+It is this game for which predictions will be made.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="code.html" title="previous chapter">Ingesting Data from the MySportsFeeds API</a></li>
+      <li>Next: <a href="app_execution.html" title="next chapter">Creating Database</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/predictive_model.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Joe Gilbert.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/predictive_model.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

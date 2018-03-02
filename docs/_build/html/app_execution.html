@@ -1,0 +1,240 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Creating Database &#8212; lbj_predictions 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Training a Predictive Model and Making Predictions" href="predictive_model.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-create_initial_db">
+<span id="creating-database"></span><h1>Creating Database<a class="headerlink" href="#module-create_initial_db" title="Permalink to this headline">¶</a></h1>
+<p>Functionality for standing up the inital database using historical data.</p>
+<p>This module should be run as main once when initializing the app. It builds
+the games table in the database using all data from the 2015-16 and 2016-17
+seasons as well as every game that has been completed as of the day before
+runtime in the 2017-18 season. Because this requires many API pulls this
+process will take several hours.</p>
+<dl class="function">
+<dt id="create_initial_db.build_db">
+<code class="descclassname">create_initial_db.</code><code class="descname">build_db</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#create_initial_db.build_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates initial database with historical data.</p>
+<p>Builds database with full data from 2015-2016 and 2016-2017 seasons, as
+well as data up through the day of code execution from the 2017-2018
+season.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-update_db">
+<span id="updating-daily"></span><h1>Updating Daily<a class="headerlink" href="#module-update_db" title="Permalink to this headline">¶</a></h1>
+<p>Functions for making the daily update to the database.</p>
+<p>This module provides functions for updating the database on a daily basis. If
+run as main it will update the games table in the database containing
+information on all completed games as well as the next one upcoming, and then
+proceed to update the predictions table in the database with the latest
+prediction for the upcoming game. This should be executed daily via the
+crontab.</p>
+<dl class="function">
+<dt id="update_db.make_new_predictions">
+<code class="descclassname">update_db.</code><code class="descname">make_new_predictions</code><span class="sig-paren">(</span><em>models</em><span class="sig-paren">)</span><a class="headerlink" href="#update_db.make_new_predictions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Using the supplied trained_linear_models object, makes predictions.</p>
+<p>This function uses the custom class trained_linear_models&#8217; predict method
+to add or modify the attributes of that class that contain the predictions
+of points, rebounds, and assists for the upcoming game, as well as the date
+of the upcoming game.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>models</strong> (<em>mTF.trained_linear_models</em>) &#8211; takes object of custom class
+trained_linear_models to make predictions. After this function
+executes, this object will have attributes containing these
+predictions.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="update_db.update_db">
+<code class="descclassname">update_db.</code><code class="descname">update_db</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#update_db.update_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to run daily to update db with latest info.</p>
+<p>This function will run functions from updateFunctions.py to add a new row
+to the database if appropriate, or otherwise just update the bottom row. It
+is intended to be executed once per day.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
+<dt>string describing the type of update that was made</dt>
+<dd>to the database. Possible values are &#8216;newgameupdate&#8217;,
+&#8216;updatedstats&#8217;, and &#8216;nogame&#8217;.</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">update status (str)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="update_db.update_model">
+<code class="descclassname">update_db.</code><code class="descname">update_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#update_db.update_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to run when needed to create new model with latest data.</p>
+<p>This function will run when new game results are available to retrain the
+model.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
+<dt>returns object of custom class</dt>
+<dd>trained_linear_models which has attributes of models to predict
+points, assists, and rebounds</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">models (mTF.trained_linear_models)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="update_db.update_predictions_db">
+<code class="descclassname">update_db.</code><code class="descname">update_predictions_db</code><span class="sig-paren">(</span><em>update_status</em><span class="sig-paren">)</span><a class="headerlink" href="#update_db.update_predictions_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates table in database containing predictions.</p>
+<p>Based on what type of update was made to the database table containing info
+on games, this function will take the proper steps in updating the table
+containing predictions. If new game results were added to the former table
+the model will be retrained and predictions will be made. Otherwise, the
+most recent model will be recalled and used to make new predictions based
+on any updated info pertaining to the upcoming game.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>update_status</strong> (<em>str</em>) &#8211; the return of uf.make_update, and in turn the
+return of update_db(). Describes the type of update made to the
+games table and informs what process should be used for making new
+predictions (build new model and predict, predict using most recent
+model, or do nothing because there are no upcoming games).</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Creating Database</a></li>
+<li><a class="reference internal" href="#module-update_db">Updating Daily</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="predictive_model.html" title="previous chapter">Training a Predictive Model and Making Predictions</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/app_execution.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Joe Gilbert.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/app_execution.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
