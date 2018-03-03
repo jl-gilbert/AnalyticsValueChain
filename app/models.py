@@ -36,7 +36,7 @@ class Game(db.Model):
 
 class Predictions(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    game_date = db.Column(db.DateTime, unique=True, nullable=False)
+    game_date = db.Column(db.DateTime, unique=False, nullable=False)
     predict_date = db.Column(db.DateTime, unique=False, nullable=False)
     predicted_pts = db.Column(db.Float, unique=False, nullable=False)
     predicted_rbs = db.Column(db.Float, unique=False, nullable=False)
