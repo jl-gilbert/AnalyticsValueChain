@@ -32,3 +32,16 @@ class Game(db.Model):
 
     def __repr__(self):
         return '<Game on %r>' % (str(self.date))
+
+
+class Predictions(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    game_date = db.Column(db.DateTime, unique=False, nullable=False)
+    predict_date = db.Column(db.DateTime, unique=False, nullable=False)
+    predicted_pts = db.Column(db.Float, unique=False, nullable=False)
+    predicted_rbs = db.Column(db.Float, unique=False, nullable=False)
+    predicted_ast = db.Column(db.Float, unique=False, nullable=False)
+
+    def __repr__(self):
+        return('<Lebron James predicted to score %r>' % (
+                str(self.predicted_pts)))

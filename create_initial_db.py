@@ -1,3 +1,11 @@
+"""Functionality for standing up the inital database using historical data.
+
+This module should be run as main once when initializing the app. It builds
+the games table in the database using all data from the 2015-16 and 2016-17
+seasons as well as every game that has been completed as of the day before
+runtime in the 2017-18 season. Because this requires many API pulls this
+process will take several hours.
+"""
 from app import db
 from develop import dataPullProcessFunctions as dppf
 from app.models import Game

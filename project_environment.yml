@@ -12,17 +12,26 @@ dependencies:
 - cryptography=2.1.4=py35hbeb2da1_0
 - flask=0.12.2=py35h679e90e_0
 - idna=2.6=py35h8605a33_1
+- intel-openmp=2018.0.0=hc7b2577_8
 - itsdangerous=0.24=py35h7c46880_1
 - jinja2=2.10=py35h480ab6d_0
+- libgfortran-ng=7.2.0=h9f7466a_2
 - markupsafe=1.0=py35h4f4fcf6_1
+- mkl=2018.0.1=h19d6760_4
+- numpy=1.14.1=py35h3dfced4_1
 - pycparser=2.18=py35h61b3040_1
+- pymysql=0.7.11=py35h9a3333c_0
 - pyopenssl=17.5.0=py35h4f8b8c8_0
 - pysocks=1.6.7=py35h6aefbb0_1
 - requests=2.18.4=py35hb9e6ad1_1
+- scikit-learn=0.19.1=py35hbf1f462_0
+- scipy=1.0.0=py35hcbbe4a2_0
 - urllib3=1.22=py35h2ab6e29_0
 - werkzeug=0.14.1=py35_0
 - r-base64=1.1=r3.2.2_0
 - flask-sqlalchemy=2.3.2=py_0
+- pandas=0.22.0=py35_0
+- pytz=2018.3=py_0
 - sqlalchemy=1.2.1=py35_0
 - bleach=2.1.2=py35_0
 - ca-certificates=2017.08.26=h1d4fec5_0
@@ -125,10 +134,29 @@ dependencies:
 - zeromq=4.2.2=hbedb6e5_2
 - zlib=1.2.11=ha838bed_2
 - pip:
+  - awscli==1.14.45
+  - awsebcli==3.12.3
+  - blessed==1.14.2
+  - botocore==1.8.49
+  - cement==2.8.2
+  - colorama==0.3.7
+  - dockerpty==0.4.1
+  - docopt==0.6.2
+  - docutils==0.14
   - ipython-genutils==0.2.0
+  - jmespath==0.9.3
   - jupyter-client==5.2.1
   - jupyter-console==5.2.0
   - jupyter-core==4.4.0
+  - pathspec==0.5.5
   - prompt-toolkit==1.0.15
+  - pyasn1==0.4.2
+  - pyyaml==3.12
+  - rsa==3.4.2
+  - s3transfer==0.1.13
+  - semantic-version==2.5.0
+  - tabulate==0.7.5
+  - termcolor==1.1.0
+  - websocket-client==0.47.0
 prefix: /home/lab.analytics.northwestern.edu/jgilbert/.conda/envs/project_env
 

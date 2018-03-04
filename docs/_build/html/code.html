@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Data Pull from API and Database Creation! &#8212; lbj_predictions 1.0.0 documentation</title>
+    <title>Ingesting Data from the MySportsFeeds API &#8212; lbj_predictions 1.0.0 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -42,30 +42,9 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="data-pull-from-api-and-database-creation">
-<h1>Data Pull from API and Database Creation!<a class="headerlink" href="#data-pull-from-api-and-database-creation" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-</div>
-<span class="target" id="module-create_initial_db"></span><dl class="function">
-<dt id="create_initial_db.build_db">
-<code class="descclassname">create_initial_db.</code><code class="descname">build_db</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#create_initial_db.build_db" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates initial database with historical data.</p>
-<p>Builds database with full data from 2015-2016 and 2016-2017 seasons, as
-well as data up through the day of code execution from the 2017-2018
-season.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<span class="target" id="module-dataPullProcessFunctions"></span><p>Functions and classes for pulling data from API and processing for database</p>
+  <div class="section" id="module-dataPullProcessFunctions">
+<span id="ingesting-data-from-the-mysportsfeeds-api"></span><h1>Ingesting Data from the MySportsFeeds API<a class="headerlink" href="#module-dataPullProcessFunctions" title="Permalink to this headline">¶</a></h1>
+<p>Functions and classes for pulling data from API and processing for database</p>
 <p>This module provides functions and a class that can be used for pulling from
 the MySportsFeeds.com API. It has several functions to make API calls for
 various types of responses, as well as some functions for altering Python
@@ -406,13 +385,565 @@ also works. If None object is passed, full season is requested.</li>
 </dd></dl>
 
 </div>
-<div class="section" id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
-<ul class="simple">
-<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
-<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
-<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+<div class="section" id="module-updateFunctions">
+<span id="making-daily-updates-to-the-games-table-in-database"></span><h1>Making Daily Updates to the Games Table in Database<a class="headerlink" href="#module-updateFunctions" title="Permalink to this headline">¶</a></h1>
+<p>Functions for executing daily update to database.</p>
+<p>This module provides several functions that execute the required daily update
+to the database reflecting results of any games that were in the database but
+without results, then finding the next upcoming game and adding it to the
+database without results, or just making sure the opponent&#8217;s stats are up to
+date if no Cavaliers games have occurred since the last update.</p>
+<dl class="function">
+<dt id="updateFunctions.find_next_opponent">
+<code class="descclassname">updateFunctions.</code><code class="descname">find_next_opponent</code><span class="sig-paren">(</span><em>season</em>, <em>today</em><span class="sig-paren">)</span><a class="headerlink" href="#updateFunctions.find_next_opponent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to find basic details about the next game on the schedule</p>
+<p>This function finds the next game on the schedule that has not been played
+as of &#8216;today&#8217;.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>today</strong> (<em>datetime.date</em><em>(</em><em></em><em>)</em><em></em>) &#8211; date object, if datetime.now().date() is
+passed, the real today will be used.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
+<dt>dictionary with opponent, date, and home/away</dt>
+<dd>status for next upcoming game. If there is no regular season game
+within the next 15 days, an empty dictionary is returned.</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">next_game_info (dict)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="updateFunctions.full_daily_update">
+<code class="descclassname">updateFunctions.</code><code class="descname">full_daily_update</code><span class="sig-paren">(</span><em>today</em>, <em>datapull</em>, <em>database</em><span class="sig-paren">)</span><a class="headerlink" href="#updateFunctions.full_daily_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to write results of last game and return info on upcoming game</p>
+<p>This function is used when a game has been completed since the last time
+the database updated. It will edit the bottom row in the database to
+include the stats from said completed game. It will then return a
+dictionary of all available info for the next upcoming game so that can
+be written to the database (though this function does not perform that
+write). If there is no game upcoming in the next 15 days to return the info
+for, the function will return a string saying so and also print that string
+to the console.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>today</strong> (<em>datetime.date</em><em>(</em><em></em><em>)</em><em></em>) &#8211; date of &#8216;today&#8217;, or day we are doing update
+for</li>
+<li><strong>datapull</strong> (<em>list</em>) &#8211; the list of app.models.Game objects returned by pull
+from db for full season.</li>
+<li><strong>db</strong> (<em>flask_sqlalchemy.SQLAlchemy</em>) &#8211; database to write the edit to</li>
 </ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
+<dt>dictionary with date, opponent, and home/away status</dt>
+<dd><p class="first last">for next game on the schedule that is not yet in the database. This
+is only returned if there is a new game within the next 15 days</p>
+</dd>
+</dl>
+<p>error_string (str): string returned if there is not a new game</p>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">next_game (dict)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="updateFunctions.make_update">
+<code class="descclassname">updateFunctions.</code><code class="descname">make_update</code><span class="sig-paren">(</span><em>today</em>, <em>season</em>, <em>database</em><span class="sig-paren">)</span><a class="headerlink" href="#updateFunctions.make_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to make required daily update to db.</p>
+<p>This function will, depending on the contents of the bottom row of the
+database, make the type of update needed. If the bottom row contains a
+game that has occurred in the past, this function will fill in the stats
+from that game and add a new row onto the bottom of the database with
+the incomplete stats from the next game on the schedule (those stats will
+be completed when this function is run again after that game happens). If
+there is no upcoming game, this function will still write in the results
+of the last game in the database and commit that change, but do nothing
+else.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>today</strong> (<em>datetime.date</em><em>(</em><em></em><em>)</em><em></em>) &#8211; date of &#8216;today&#8217;, or day we are doing update
+for</li>
+<li><strong>season</strong> (<em>str</em>) &#8211; string representing current season, like &#8216;2017-2018-
+regular&#8217;</li>
+<li><strong>db</strong> (<em>flask_sqlalchemy.SQLAlchemy</em>) &#8211; database to pull from and write to</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">string describing type of update made, either
+&#8220;newgameupdate&#8221;, &#8220;updatedstats&#8221;, or &#8220;nogame&#8221;.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">status (str)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="updateFunctions.opp_stat_update">
+<code class="descclassname">updateFunctions.</code><code class="descname">opp_stat_update</code><span class="sig-paren">(</span><em>season</em>, <em>season_start_date</em>, <em>today</em>, <em>opponent</em><span class="sig-paren">)</span><a class="headerlink" href="#updateFunctions.opp_stat_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that provides up-to-date stats for opponent.</p>
+<p>This function will find an opponent&#8217;s wins, losses, offensive efficiency
+rating, and defensive efficiency rating through the season up to the value
+of &#8216;today&#8217; provided.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>season</strong> (<em>str</em>) &#8211; season of the date on which we are updating, like
+&#8216;2017-2018-regular&#8217;</li>
+<li><strong>season_start_date</strong> (<em>datetime.date</em><em>(</em><em></em><em>)</em><em></em>) &#8211; date of the first game of this
+season</li>
+<li><strong>today</strong> (<em>datetime.date</em><em>(</em><em></em><em>)</em><em></em>) &#8211; date of &#8216;today&#8217;, or day we are doing update
+for</li>
+<li><strong>opponent</strong> (<em>str</em>) &#8211; 3 letter abbreviation for opponent whose stats we are
+updating, like &#8216;BOS&#8217;</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
+<dt>dictionary with up-to-date wins, losses,</dt>
+<dd><p class="first last">defensive efficiency rating, and offensive efficiency rating for
+opponent</p>
+</dd>
+</dl>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">upcoming_opp_stats (dict)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="updateFunctions.pull_from_db">
+<code class="descclassname">updateFunctions.</code><code class="descname">pull_from_db</code><span class="sig-paren">(</span><em>season</em><span class="sig-paren">)</span><a class="headerlink" href="#updateFunctions.pull_from_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to pull all data from a given season into workspace.</p>
+<p>This function pulls all data from presumably the current season so that
+it can be used to check the type of update needed and/or for aggregating
+new season-long statistics based on new results.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>season</strong> (<em>str</em>) &#8211; name of season data to pull in, like &#8216;2017-2018-regular&#8217;</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">list of app.models.Game objects</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#dataPullProcessFunctions.schedule.games" title="dataPullProcessFunctions.schedule.games">games</a> (list)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="updateFunctions.reverse_engineer_stats">
+<code class="descclassname">updateFunctions.</code><code class="descname">reverse_engineer_stats</code><span class="sig-paren">(</span><em>games_played</em>, <em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#updateFunctions.reverse_engineer_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function for determining season totals based on data in db</p>
+<p>For the purposes of aggregating with data from new game, this function
+reverse engineers what season totals were before that game.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>games_played</strong> (<em>int</em>) &#8211; number of games LeBron has played this season, for
+the purpose of calculating totals based on per-game figures stored
+in the db</li>
+<li><strong>data</strong> (<em>dict</em>) &#8211; dictionary with season per-game averages and shooting
+percentages, from which season totals can be derived. Must include
+keys: &#8216;rpg&#8217;, &#8216;apg&#8217;, &#8216;plusmin&#8217;, &#8216;2ptm&#8217;, &#8216;3ptm&#8217;, &#8216;ftm&#8217; (all season
+per-game averages), &#8216;2pt_pct&#8217;, &#8216;3pt_pct&#8217;, and &#8216;ft_pct&#8217; (season
+percentages).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
+<dt>dictionary with season totals for rebounds, assits,</dt>
+<dd><p class="first last">plus/minus, and 2pt/3pt/ft made and attempted.</p>
+</dd>
+</dl>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">statdict (dict)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-modelTrainingFunctions">
+<span id="training-a-predictive-model-and-making-predictions"></span><h1>Training a Predictive Model and Making Predictions<a class="headerlink" href="#module-modelTrainingFunctions" title="Permalink to this headline">¶</a></h1>
+<p>Functions for pulling data from database and using it to train and predict.</p>
+<p>This module provides functions and classes for pulling data from the database
+into a pandas dataframe, organizing the data into relevant training data
+and data to be used as predictors for the upcoming game, and finally for
+training the model and using it to make predictions.</p>
+<dl class="function">
+<dt id="modelTrainingFunctions.convert_home_away">
+<code class="descclassname">modelTrainingFunctions.</code><code class="descname">convert_home_away</code><span class="sig-paren">(</span><em>df</em><span class="sig-paren">)</span><a class="headerlink" href="#modelTrainingFunctions.convert_home_away" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts categorical variable into binary numeric.</p>
+<p>This function will replace the &#8220;home/away&#8221; attribute of the dataframe,
+stored in the database as strings, into a binary numeric variable so that
+it can easily be used by the scikit-learn model in model training and
+outcome prediction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>df</strong> (<em>pd.DataFrame</em>) &#8211; pandas dataframe containing the column to be
+converted.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="modelTrainingFunctions.create_training_data">
+<code class="descclassname">modelTrainingFunctions.</code><code class="descname">create_training_data</code><span class="sig-paren">(</span><em>date=datetime.date(2018</em>, <em>3</em>, <em>2)</em><span class="sig-paren">)</span><a class="headerlink" href="#modelTrainingFunctions.create_training_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts the rows that will be useful in training a model.</p>
+<p>The function will extract only the games in which the following conditions
+are met: the opponent had played previous games in the season and thus had
+establish offensive and defensive efficiency ratings to be used as
+predictors, the game has already been completed, and Lebron James played in
+the game.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>date</strong> (<em>datetime.date</em><em>(</em><em></em><em>)</em><em></em>) &#8211; Gives the date up to which we want to use data.
+This defaults to the current day, as we assume we will be making
+a model using all available data to predict the next game. However,
+it can be specified as an earlier date if the user wants to
+reproduce an earlier model.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
+<dt>pandas dataframe containing only the rows</dt>
+<dd>suitable for use in model training.</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">good_rows (pd.DataFrame)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="modelTrainingFunctions.create_upcoming_game">
+<code class="descclassname">modelTrainingFunctions.</code><code class="descname">create_upcoming_game</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modelTrainingFunctions.create_upcoming_game" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates single-row dataframe containing info on the next future game.</p>
+<p>This function will query the games database and return the last row,
+which is the next upcoming game, as a pandas dataframe.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
+<dt>single-row dataframe containing info on the</dt>
+<dd>next upcoming game</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">predict_row (pd.DataFrame)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="modelTrainingFunctions.extract_predictors">
+<code class="descclassname">modelTrainingFunctions.</code><code class="descname">extract_predictors</code><span class="sig-paren">(</span><em>df</em><span class="sig-paren">)</span><a class="headerlink" href="#modelTrainingFunctions.extract_predictors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts the columns needed as predictor variables in the model.</p>
+<p>This function will return a new dataframe that is a slice of the inputed
+dataframe but only containing the columns relevant to prediction of the
+responses.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>df</strong> (<em>pd.DataFrame</em>) &#8211; pandas dataframe to be sliced</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
+<dt>pandas dataframe with only the predictor</dt>
+<dd>columns</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">predictors (pd.DataFrame)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="modelTrainingFunctions.pandas_from_db">
+<code class="descclassname">modelTrainingFunctions.</code><code class="descname">pandas_from_db</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modelTrainingFunctions.pandas_from_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function for putting the entire games table into a pandas dataframe.</p>
+<p>This function queries the game table in the database for all rows and
+places the return into a pandas dataframe.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
+<dt>pandas dataframe containing full contents of game</dt>
+<dd>table from database</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">data (pd.DataFrame)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="modelTrainingFunctions.trained_linear_models">
+<em class="property">class </em><code class="descclassname">modelTrainingFunctions.</code><code class="descname">trained_linear_models</code><span class="sig-paren">(</span><em>date=datetime.date(2018</em>, <em>3</em>, <em>2)</em><span class="sig-paren">)</span><a class="headerlink" href="#modelTrainingFunctions.trained_linear_models" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class containing predictive models and the predictions they yield.</p>
+<p>By default, this class will build models using all past data, but a user
+can also use it to reproduce models made in the past.  To do so, the user
+would pass the date of the game for which reproduced predictions are
+desired into the constructor, then when executing the predict method, pass
+the row from the games table in the database of that game.</p>
+<dl class="attribute">
+<dt id="modelTrainingFunctions.trained_linear_models.pts_model">
+<code class="descname">pts_model</code><a class="headerlink" href="#modelTrainingFunctions.trained_linear_models.pts_model" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>sklearn.linear_model</em> &#8211; scikit-learn trained linear model
+for predicting points.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="modelTrainingFunctions.trained_linear_models.rbs_model">
+<code class="descname">rbs_model</code><a class="headerlink" href="#modelTrainingFunctions.trained_linear_models.rbs_model" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>sklearn.linear_model</em> &#8211; scikit-learn trained linear model
+for predicting rebounds.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="modelTrainingFunctions.trained_linear_models.ast_model">
+<code class="descname">ast_model</code><a class="headerlink" href="#modelTrainingFunctions.trained_linear_models.ast_model" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>sklearn.linear_model</em> &#8211; scikit-learn trained linear model
+for predicting assists.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="modelTrainingFunctions.trained_linear_models.predicted_pts">
+<code class="descname">predicted_pts</code><a class="headerlink" href="#modelTrainingFunctions.trained_linear_models.predicted_pts" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; predicted number of points for specified game</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="modelTrainingFunctions.trained_linear_models.predicted_rbs">
+<code class="descname">predicted_rbs</code><a class="headerlink" href="#modelTrainingFunctions.trained_linear_models.predicted_rbs" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; predicted number of rebounds for specified game</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="modelTrainingFunctions.trained_linear_models.predicted_ast">
+<code class="descname">predicted_ast</code><a class="headerlink" href="#modelTrainingFunctions.trained_linear_models.predicted_ast" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; predicted number of assists for specified game</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="modelTrainingFunctions.trained_linear_models.predicted_game_date">
+<code class="descname">predicted_game_date</code><a class="headerlink" href="#modelTrainingFunctions.trained_linear_models.predicted_game_date" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>datetime.date()</em> &#8211; date of game for which
+predictions are made.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modelTrainingFunctions.trained_linear_models.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><em>predict_game</em><span class="sig-paren">)</span><a class="headerlink" href="#modelTrainingFunctions.trained_linear_models.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to make predictions with supplied game information.</p>
+<p>This method will define the attributes of the trained_linear_models
+object that describe the predictions it makes for a game and the date
+of that game.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>predict_game</strong> (<em>pd.DataFrame</em>) &#8211; single-row pandas dataframe containing
+all columns from the games database in regard to a single game.
+It is this game for which predictions will be made.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-create_initial_db">
+<span id="creating-database"></span><h1>Creating Database<a class="headerlink" href="#module-create_initial_db" title="Permalink to this headline">¶</a></h1>
+<p>Functionality for standing up the inital database using historical data.</p>
+<p>This module should be run as main once when initializing the app. It builds
+the games table in the database using all data from the 2015-16 and 2016-17
+seasons as well as every game that has been completed as of the day before
+runtime in the 2017-18 season. Because this requires many API pulls this
+process will take several hours.</p>
+<dl class="function">
+<dt id="create_initial_db.build_db">
+<code class="descclassname">create_initial_db.</code><code class="descname">build_db</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#create_initial_db.build_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates initial database with historical data.</p>
+<p>Builds database with full data from 2015-2016 and 2016-2017 seasons, as
+well as data up through the day of code execution from the 2017-2018
+season.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-update_db">
+<span id="updating-daily"></span><h1>Updating Daily<a class="headerlink" href="#module-update_db" title="Permalink to this headline">¶</a></h1>
+<p>Functions for making the daily update to the database.</p>
+<p>This module provides functions for updating the database on a daily basis. If
+run as main it will update the games table in the database containing
+information on all completed games as well as the next one upcoming, and then
+proceed to update the predictions table in the database with the latest
+prediction for the upcoming game. This should be executed daily via the
+crontab.</p>
+<dl class="function">
+<dt id="update_db.make_new_predictions">
+<code class="descclassname">update_db.</code><code class="descname">make_new_predictions</code><span class="sig-paren">(</span><em>models</em><span class="sig-paren">)</span><a class="headerlink" href="#update_db.make_new_predictions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Using the supplied trained_linear_models object, makes predictions.</p>
+<p>This function uses the custom class trained_linear_models&#8217; predict method
+to add or modify the attributes of that class that contain the predictions
+of points, rebounds, and assists for the upcoming game, as well as the date
+of the upcoming game.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>models</strong> (<em>mTF.trained_linear_models</em>) &#8211; takes object of custom class
+trained_linear_models to make predictions. After this function
+executes, this object will have attributes containing these
+predictions.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="update_db.update_db">
+<code class="descclassname">update_db.</code><code class="descname">update_db</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#update_db.update_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to run daily to update db with latest info.</p>
+<p>This function will run functions from updateFunctions.py to add a new row
+to the database if appropriate, or otherwise just update the bottom row. It
+is intended to be executed once per day.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
+<dt>string describing the type of update that was made</dt>
+<dd>to the database. Possible values are &#8216;newgameupdate&#8217;,
+&#8216;updatedstats&#8217;, and &#8216;nogame&#8217;.</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">update status (str)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="update_db.update_model">
+<code class="descclassname">update_db.</code><code class="descname">update_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#update_db.update_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to run when needed to create new model with latest data.</p>
+<p>This function will run when new game results are available to retrain the
+model.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
+<dt>returns object of custom class</dt>
+<dd>trained_linear_models which has attributes of models to predict
+points, assists, and rebounds</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">models (mTF.trained_linear_models)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="update_db.update_predictions_db">
+<code class="descclassname">update_db.</code><code class="descname">update_predictions_db</code><span class="sig-paren">(</span><em>update_status</em><span class="sig-paren">)</span><a class="headerlink" href="#update_db.update_predictions_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates table in database containing predictions.</p>
+<p>Based on what type of update was made to the database table containing info
+on games, this function will take the proper steps in updating the table
+containing predictions. If new game results were added to the former table
+the model will be retrained and predictions will be made. Otherwise, the
+most recent model will be recalled and used to make new predictions based
+on any updated info pertaining to the upcoming game.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>update_status</strong> (<em>str</em>) &#8211; the return of uf.make_update, and in turn the
+return of update_db(). Describes the type of update made to the
+games table and informs what process should be used for making new
+predictions (build new model and predict, predict using most recent
+model, or do nothing because there are no upcoming games).</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 
 
@@ -423,8 +954,11 @@ also works. If None object is passed, full season is requested.</li>
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Data Pull from API and Database Creation!</a></li>
-<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+<li><a class="reference internal" href="#">Ingesting Data from the MySportsFeeds API</a></li>
+<li><a class="reference internal" href="#module-updateFunctions">Making Daily Updates to the Games Table in Database</a></li>
+<li><a class="reference internal" href="#module-modelTrainingFunctions">Training a Predictive Model and Making Predictions</a></li>
+<li><a class="reference internal" href="#module-create_initial_db">Creating Database</a></li>
+<li><a class="reference internal" href="#module-update_db">Updating Daily</a></li>
 </ul>
 <div class="relations">
 <h3>Related Topics</h3>

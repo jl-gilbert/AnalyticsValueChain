@@ -3,23 +3,32 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Data Pull from API and Database Creation!
-===========================================
+Ingesting Data from the MySportsFeeds API
+=========================================
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:_
+.. automodule:: dataPullProcessFunctions
+   :members:
+   
+Making Daily Updates to the Games Table in Database
+===================================================
+
+.. automodule:: updateFunctions
+   :members:
+
+Training a Predictive Model and Making Predictions
+==================================================
+
+.. automodule:: modelTrainingFunctions
+   :members:
+
+Creating Database
+=================
 
 .. automodule:: create_initial_db
    :members:
-.. automodule:: dataPullProcessFunctions
+
+Updating Daily
+==============
+   
+.. automodule:: update_db
    :members:
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
