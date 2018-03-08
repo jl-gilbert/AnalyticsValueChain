@@ -39,6 +39,122 @@ body {
 	background-color: Gold;
 	color: Black;
 }
+#BOS {
+	background-color: Green;
+	color: White;
+}
+#BRO {
+	background-color: Black;
+	color: White;
+}
+#NYK {
+	background-color: Orange;
+	color: MediumBlue;
+}
+#PHI {
+	background-color: Green;
+	color: White;
+}
+#TOR {
+	background-color: Black;
+	color: Red;
+}
+#CHI {
+	background-color: Red;
+	color: White;
+}
+#DET {
+	background-color: Navy;
+	color: Red;
+}
+#MIL {
+	background-color: ForestGreen;
+	color: Tan;
+}
+#IND {
+	background-color: Navy;
+	color: Gold;
+}
+#ATL {
+	background-color: Red;
+	color: LawnGreen;
+}
+#CHA {
+	background-color: Teal;
+	color: Indigo;
+}
+#MIA {
+	background-color: Red;
+	color: Gold;
+}
+#ORL {
+	background-color: RoyalBlue;
+	color: Black;
+}
+#WAS {
+	background-color: Red;
+	color: Navy;
+}
+#DAL {
+	background-color: Silver;
+	color: RoyalBlue;
+}
+#HOU {
+	background-color: White;
+	color: Red;
+}
+#MEM {
+	background-color: Navy;
+	color: SkyBlue;
+}
+#NOP {
+	background-color: Gold;
+	color: Navy;
+}
+#SAS {
+	background-color: Silver;
+	color: Black;
+}
+#DEN {
+	background-color: SkyBlue;
+	color: Gold;
+}
+#MIN {
+	background-color: Navy;
+	color: LawnGreen;
+}
+#OKL {
+	background-color: MediumBlue;
+	color: OrangeRed;
+}
+#POR {
+	background-color: Red;
+	color: Black;
+}
+#UTA {
+	background-color: ForestGreen;
+	color: Gold;
+}
+#GSW {
+	background-color: RoyalBlue;
+	color: Gold;
+}
+#LAC {
+	background-color: RoyalBlue;
+	color: Red;
+}
+#LAL {
+	background-color: RebeccaPurple;
+	color: Gold;
+}
+#PHX {
+	background-color: Orange;
+	color: RebeccaPurple;
+}
+#SAC {
+	background-color: RebeccaPurple;
+	color: White;
+}
 .record_class {
 	font-size: small;
 }

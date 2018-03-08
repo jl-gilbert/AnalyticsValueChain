@@ -13,6 +13,7 @@ from app import app, db
 from develop import dataPullProcessFunctions as dppf
 from app.models import Game
 from datetime import datetime, timedelta
+import logging
 
 
 def pull_from_db(season):
@@ -29,6 +30,7 @@ def pull_from_db(season):
         games (list): list of app.models.Game objects
     """
     games = Game.query.filter_by(season=season).all()
+    logging.debug('Succesfull pull of all game data from db.')
     return games
 
 
@@ -50,11 +52,13 @@ def find_next_opponent(season, today):
     next_game_info = {}
     search_date_end = dppf.date_to_api_format(today + timedelta(days=15))
     today_code = dppf.date_to_api_format(today)
+    logging.debug('Searching for next game.')
     upcomingjson = dppf.send_request_schedule(
             season,
             'CLE', 'from-' + today_code + '-to-' + search_date_end).json()
     # confirm there are any upcoming games, otherwise return empty dictionary
     if len(upcomingjson['fullgameschedule']) > 1:
+        logging.debug('Next game found.')
         nextgame = upcomingjson['fullgameschedule']['gameentry'][0]
         next_game_info['date'] = datetime.strptime(nextgame['date'],
                                                    '%Y-%m-%d').date()
@@ -182,11 +186,11 @@ def full_daily_update(today, datapull, database):
     # datapull is result of Game.query.filter_by(season).all()
     # db is database to write updates to
     # first find stats from just-completed game
-    print("Making full daily update")
+    logging.info('Making full daily update')
     last_game = datapull[len(datapull) - 1]
-    print("last_game object is of type " + str(type(last_game)))
-    print(last_game.date)
-    print(last_game.opponent)
+    logging.debug('last_game object is of type %s', type(last_game))
+    logging.debug('last game was on %s against %s',
+                  last_game.date, last_game.opponent)
     this_season = last_game.season
     lastgamejson = dppf.send_request_lbj(this_season,
                                          dppf.date_to_api_format(
@@ -202,12 +206,11 @@ def full_daily_update(today, datapull, database):
         last_game.lbj_DNP = False
     # add in game stats to bottom row of database-most recently completed game
     database.session.commit()
-    print("Last game stats added.")
+    logging.info('Last game stats added.')
     # now move on to upcoming game
     next_game = find_next_opponent(this_season, today)
     # confirm that we were able to find an upcoming game
     if len(next_game) > 0:
-        print("Finding next game.")
         delta = next_game['date'] - last_game.date.date()
         next_game['days_rest'] = delta.days - 1
         next_game['lbj_games_missed'] = last_game.lbj_games_missed + last_game.lbj_DNP
@@ -284,7 +287,7 @@ def full_daily_update(today, datapull, database):
     else:
         error_string = "No new game"
         return error_string
-        print("No upcoming games on regular season schedule to pull.")
+        logging.warning("No upcoming games on regular season schedule.")
 
 
 def make_update(today, season, database):
