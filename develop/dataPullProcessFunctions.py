@@ -11,6 +11,7 @@ import requests
 import base64
 from datetime import datetime, timedelta
 import time
+import logging
 
 from develop import config
 
@@ -60,12 +61,12 @@ def send_request_schedule(season, team, daterange):
                             ).encode('utf-8')).decode('ascii')
                     }
         )
-        print('Response HTTP Status Code: {status_code}'.format(
+        logging.debug('Response HTTP Status Code: {status_code}'.format(
             status_code=response.status_code))
         time.sleep(3)
         return response
     except requests.exceptions.RequestException:
-        print('HTTP Request failed')
+        logging.error('HTTP Request failed')
 
 
 def send_request_lbj(season, daterange):
@@ -99,12 +100,12 @@ def send_request_lbj(season, daterange):
                                 ).encode('utf-8')).decode('ascii')
                         }
         )
-        print('Response HTTP Status Code: {status_code}'.format(
+        logging.debug('Response HTTP Status Code: {status_code}'.format(
             status_code=response.status_code))
         time.sleep(3)
         return response
     except requests.exceptions.RequestException:
-        print('HTTP Request failed')
+        logging.error('HTTP Request failed')
 
 
 def request_opponent_stats(season, gameID):
@@ -136,12 +137,12 @@ def request_opponent_stats(season, gameID):
                                 ).encode('utf-8')).decode('ascii')
                         }
         )
-        print('Response HTTP Status Code: {status_code}'.format(
+        logging.debug('Response HTTP Status Code: {status_code}'.format(
             status_code=response.status_code))
         time.sleep(3)
         return response
     except requests.exceptions.RequestException:
-        print('HTTP Request failed')
+        logging.error('HTTP Request failed')
 
 
 def extract_lbj_stats(json_game):
@@ -207,12 +208,12 @@ def send_request_cavsgame(season, date):
                                 ).encode('utf-8')).decode('ascii')
                         }
         )
-        print('Response HTTP Status Code: {status_code}'.format(
+        logging.debug('Response HTTP Status Code: {status_code}'.format(
             status_code=response.status_code))
         time.sleep(3)
         return response
     except requests.exceptions.RequestException:
-        print('HTTP Request failed')
+        logging.error('HTTP Request failed')
 
 
 def find_opponent_stats(season, from_date, to_date, starting_values, opponent):
@@ -258,7 +259,7 @@ def find_opponent_stats(season, from_date, to_date, starting_values, opponent):
         for opp_game_ID in opponent_games:
             # call API for each box score of every game the
             # opponent had between the two dates specified (inclusive)
-            print(opp_game_ID)
+            logging.debug("Requesting stats for %s", opp_game_ID)
             box_score_json = request_opponent_stats(
                     season, opp_game_ID).json()
             # record stats

@@ -9,6 +9,7 @@ process will take several hours.
 from app import db
 from develop import dataPullProcessFunctions as dppf
 from app.models import Game
+import logging
 
 
 def build_db():
@@ -26,8 +27,9 @@ def build_db():
     """
     db.drop_all()
     db.create_all()
-    print("Db Created.")
+    logging.info('Database created.')
     schedule2015 = dppf.schedule('2015-2016-regular', None)
+    logging.debug('2015-16 season data retrieved, adding to database.')
     for game in schedule2015.games:
         game_stats = Game(date=game['date'],
                           season=schedule2015.season,
@@ -59,7 +61,9 @@ def build_db():
             game_stats.lbj_inactive = True
         db.session.add(game_stats)
         db.session.commit()
+    logging.info('2015-16 season data added.')
     schedule2016 = dppf.schedule('2016-2017-regular', None)
+    logging.debug('2016-17 season data retrieved, adding to database.')
     for game in schedule2016.games:
         game_stats = Game(date=game['date'],
                           season=schedule2016.season,
@@ -91,7 +95,9 @@ def build_db():
             game_stats.lbj_inactive = True
         db.session.add(game_stats)
         db.session.commit()
+    logging.info('2016-17 season data added.')
     schedule2017 = dppf.schedule('2017-2018-regular', 'until-yesterday')
+    logging.debug('2017-18 season data through yesterday retrieved, adding to database.')
     for game in schedule2017.games:
         game_stats = Game(date=game['date'],
                           season=schedule2017.season,
@@ -123,8 +129,11 @@ def build_db():
             game_stats.lbj_inactive = True
         db.session.add(game_stats)
         db.session.commit()
+    logging.info('2017-18 season data added.')
     db.session.close()
 
 
 if __name__ == "__main__":
+    logging.basicConfig(filename="logs/initial_db_creation.log",
+                        level=logging.DEBUG)
     build_db()

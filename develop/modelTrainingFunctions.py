@@ -17,6 +17,7 @@ import numpy as np
 import pandas as pd
 from sklearn import linear_model
 from datetime import datetime
+import logging
 
 
 def pandas_from_db():
@@ -35,6 +36,7 @@ def pandas_from_db():
     engine = create_engine(SQLALCHEMY_DATABASE_URI)
     sql = "select * from game"
     data = pd.read_sql_query(sql, con=engine)
+    logging.debug('SQL query executed.')
     return data
 
 
@@ -177,6 +179,7 @@ class trained_linear_models:
                 train_predictors, response_rbs)
         self.ast_model = linear_model.LinearRegression().fit(
                 train_predictors, response_ast)
+        logging.debug('Linear models trained.')
 
     def predict(self, predict_game):
         """Method to make predictions with supplied game information.
@@ -203,3 +206,4 @@ class trained_linear_models:
         self.predicted_game_date = datetime.strptime(
                 predict_game.date.values[0].astype(str)[:10], '%Y-%m-%d').date(
                         )
+        logging.debug('Predictions generated.')

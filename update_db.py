@@ -14,6 +14,7 @@ from develop import updateFunctions as uf
 from develop import modelTrainingFunctions as mTF
 from datetime import datetime
 import pickle
+import logging
 
 
 def update_db():
@@ -50,6 +51,7 @@ def update_model():
             trained_linear_models which has attributes of models to predict
             points, assists, and rebounds
     """
+    logging.info('Training new model.')
     models = mTF.trained_linear_models(datetime.now().date())
     return models
 
@@ -72,6 +74,7 @@ def make_new_predictions(models):
         None
     """
     upcoming_predictors = mTF.create_upcoming_game()
+    logging.info('Making new predictions')
     models.predict(upcoming_predictors)
 
 
@@ -129,5 +132,8 @@ def update_predictions_db(update_status):
 
 
 if __name__ == "__main__":
+    logging.basicConfig(filename="logs/daily_update.log",
+                        level=logging.DEBUG)
+    logging.info('Logging for %s', str(datetime.now().date()))
     update_status = update_db()
     update_predictions_db(update_status)
