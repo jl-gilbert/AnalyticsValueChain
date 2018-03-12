@@ -126,7 +126,7 @@ def opp_stat_update(season, season_start_date, today, opponent):
             defensive efficiency rating, and offensive efficiency rating for
             opponent
     """
-    print("Updating opponent stats.")
+    logging.info("Updating opponent stats.")
     starting_values = {
         'FGAttAgainst': 0,
         'FTAttAgainst': 0,
@@ -195,8 +195,11 @@ def full_daily_update(today, datapull, database):
     lastgamejson = dppf.send_request_lbj(this_season,
                                          dppf.date_to_api_format(
                                                  last_game.date.date())).json()
-    lastgamestats = dppf.extract_lbj_stats(
+    try:
+        lastgamestats = dppf.extract_lbj_stats(
             lastgamejson['playergamelogs']['gamelogs'][0])
+    except:
+        logging.error('Stats from last game not yet available.')
     last_game.pts = lastgamestats['Pts']
     last_game.rbs = lastgamestats['Rbs']
     last_game.ast = lastgamestats['Ast']
