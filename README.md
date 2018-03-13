@@ -5,7 +5,9 @@
 Assist fans and participants in fantasy sports with short-term decisions by using features of a current matchup to predict the major statistics (points, assists, rebounds) that Lebron James will record in his next matchup. 
 
 **Vision**: Provide information to fans or others interested in Lebron James’ statistics by predicting what they will be in his next game.
+
 **Mission**: Use historical data to build a model that will predict a particular player’s statistics in his upcoming matchup. 
+
 **Success criteria**: A web app that will be updated daily to reflect the predicted statistics for Lebron James in his next game, with predictions that are subjectively reasonable. 
 
  

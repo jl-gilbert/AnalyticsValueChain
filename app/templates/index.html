@@ -7,14 +7,14 @@
 
 <body>
 	<div class="infobox_class">	
-    <h3>
-         <a>Information For Next Game</a>
-		 <div style=font-size: "small">
+		LeBron James Stats Predictions <br>
+         <div style="font-size: large;"
+		 <a>Information For Next Game</a>
+		 </div>
+		 <div style="font-size: medium;">
 			{{ next_game.date.strftime('%m-%d-%Y') }}
-		</div>
-    </h3>
 
-    <hr/>
+
 	<div class="cavs_class">
 	CLE
 	<div class="record_class">
@@ -28,10 +28,12 @@
 	</div>
 	</div>
 	<div class="predictions_class">
-	Predicted Points: {{ predictions.predicted_pts }} <br>
-	Predicted Assists: {{ predictions.predicted_ast }} <br>
-	Predicted Rebounds: {{ predictions.predicted_rbs }}
-	<hr/>
+	Predictions <br>
+	Points: {{ predictions.predicted_pts }} <br>
+	Assists: {{ predictions.predicted_ast }} <br>
+	Rebounds: {{ predictions.predicted_rbs }}
+	</div>
+	</div>
 <!--
     <table>
          <thead>
