@@ -1,5 +1,11 @@
 # LeBron James Stat Predictions
 
+### Developer: Joe Gilbert
+
+Product Owner: Tong Yin
+
+QA: Grace Cui
+
 ## Project Charter
 
 Assist fans and participants in fantasy sports with short-term decisions by using features of a current matchup to predict the major statistics (points, assists, rebounds) that Lebron James will record in his next matchup. 

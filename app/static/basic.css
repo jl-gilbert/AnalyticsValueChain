@@ -24,7 +24,7 @@ body {
 	left: 10%;
 	width: 20%;
 	top: 40%;
-	height: 20%;
+	height: auto;
 	border-style: solid;
 	border-color: black;
 	border-width: 2px;
@@ -37,7 +37,7 @@ body {
 	right: 10%;
 	width: 20%;
 	top: 40%;
-	height: 20%;
+	height: auto;
 	border-style: solid;
 	border-color: black;
 	border-width: 2px;

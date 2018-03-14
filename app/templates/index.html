@@ -8,11 +8,12 @@
 <body>
 	<div class="infobox_class">	
 		LeBron James Stats Predictions <br>
-         <div style="font-size: large;"
-		 <a>Information For Next Game</a>
+         <div style="font-size: large;">
+		 Information For Next Game
 		 </div>
 		 <div style="font-size: medium;">
 			{{ next_game.date.strftime('%m-%d-%Y') }}
+			</div>
 
 
 	<div class="cavs_class">
@@ -34,29 +35,6 @@
 	Rebounds: {{ predictions.predicted_rbs }}
 	</div>
 	</div>
-<!--
-    <table>
-         <thead>
-            <tr>
-               <th>Next Game Date</th>
-			   <th>Home/Away</th>
-               <th>Opponent</th>
-               <th>Opponent Wins</th>
-			   <th>Opponent Loses</th>
-            </tr>
-         </thead>
-
-         <tbody>
-               <tr>
-                  <td class="info_class">{{ next_game.date }}</td>
-                  <td class="info_class">{{ next_game.home_away }}</td>
-                  <td class="info_class">{{ next_game.opponent }}</td>
-				  <td class="info_class">{{ next_game.oppWins }}</td>
-				  <td class="info_class">{{ next_game.oppLosses }}</td>
-               </tr>
-         </tbody>
-      </table>
-	  -->
 	</div>
 </body>
 </html>
