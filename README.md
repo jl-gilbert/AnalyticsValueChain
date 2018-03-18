@@ -19,9 +19,9 @@ Assist fans and participants in fantasy sports with short-term decisions by usin
  
 ## Suggested steps to deploy app
 
-1. Clone repository.
+### 1. Clone repository.
 
-2. If using Anaconda, create conda environment:
+### 2. If using Anaconda, create conda environment:
 
     ```
     conda env create -f project_environment.yml
@@ -36,7 +36,14 @@ Assist fans and participants in fantasy sports with short-term decisions by usin
 
 	You may need to change your version of Python for the above step to work without returning errors. Python 3.5 will work.
 	
-4. Register for an account at MySportsFeeds.com with access to postgame data fields for in progress seasons. This will give you a username and password. 
+### 3. Run unit tests.
+
+	Navigate to root directory "AnalyticsValueChain".
+	```
+	pytest
+	```
+	
+### 4. Register for an account at MySportsFeeds.com with access to postgame data fields for in progress seasons. This will give you a username and password. 
 
 	Make a file named config.py in the "develop" directory.
 	```
@@ -45,7 +52,7 @@ Assist fans and participants in fantasy sports with short-term decisions by usin
 	```
 	
 	
-5. Make a configuration file with information on the SQL database you will be storing the data in. A MySQL instance is recommended for guaranteed compatibility. 
+### 5. Make a configuration file with information on the SQL database you will be storing the data in. A MySQL instance is recommended for guaranteed compatibility. 
 
 	Name this file dbconfig.py and put it in the "app" directory
 	```
@@ -54,7 +61,7 @@ Assist fans and participants in fantasy sports with short-term decisions by usin
 
 
 
-6. Create the initial dataset with historical data. Run the following from the root directory of the project. 
+### 6. Create the initial dataset with historical data. Run the following from the root directory of the project. 
 
     ```
     source activate project_env
@@ -64,7 +71,7 @@ Assist fans and participants in fantasy sports with short-term decisions by usin
 	This code will take several hours to run, as it requires many calls to the API (which throttles traffic to limit a user to 250 requests every 5 minutes.
 	Once this process is finished, the game table in the database will have data for every game up to the day before running the process. 
 
-7. Update the data and make first models:
+### 7. Update the data and make first models:
 
     ```
     source activate project_env
@@ -72,7 +79,7 @@ Assist fans and participants in fantasy sports with short-term decisions by usin
     ```
 	This will update the game table to the current day, train a model, find the next game, and make predictions for that game. 
 
-8. Set up the crontab to make the required updates to data, model, and predictions on a daily basis. 
+### 8. Set up the crontab to make the required updates to data, model, and predictions on a daily basis. 
 
 	First, edit the daily_update_script.bash file to make it appropriate for your environment
 	
@@ -92,11 +99,10 @@ Assist fans and participants in fantasy sports with short-term decisions by usin
 	0 <hour> * * * <path to project directory>/daily_update_script.bash
 	```
 	
-	The hour should be selected depending on what time zone the machine runs with, but should be selected so that the script runs in very early morning U.S. Central Time.
-	For example, if a crontab runs according to UTC, choosing 11 for the hour would be appropriate.
+	The hour should be selected depending on what time of day you want the data/model/prediction to be updated at. This is dependent on the API having updated, if it has not been an error message will be written to the logs stating so. 
 	
 	
-8. Launch the app:
+### 9. Launch the app:
 
     ```
 	source activate project_env
@@ -104,3 +110,12 @@ Assist fans and participants in fantasy sports with short-term decisions by usin
     ```
 
 You can then go to the IP address where the app is running and use the app.
+
+## Reproducibility
+
+Once the app is running, it will store all predictions in a table in the database. If for some reason you want to recreate predictions for an old game, be sure to train a model only with data from before that game in order to get the same results as would have been predicted at that time. 
+
+
+## Pivotal Tracker Project Link: 
+
+https://www.pivotaltracker.com/n/projects/2143914
