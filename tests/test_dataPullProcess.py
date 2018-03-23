@@ -6,11 +6,13 @@ from datetime import datetime
 
 
 def test_date_to_api():
+    """Tests function that converts date object to string for API call."""
     testdate = datetime(2018, 3, 10).date()
     assert dppf.date_to_api_format(testdate) == '20180310'
 
 
 def test_extract_lbj_stats():
+    """Tests function that pulls relevant stats out of json dict."""
     testjson = {'stats': {'Pts': {'#text': '1'},
                           'Reb': {'#text': '2'},
                           'Ast': {'#text': '3'},

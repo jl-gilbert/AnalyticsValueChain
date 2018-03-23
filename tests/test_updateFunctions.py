@@ -5,6 +5,7 @@ from develop import updateFunctions as uF
 
 
 def test_reverse_engineer_stats():
+    """Tests function that finds attempts from makes and percentages."""
     testdata = {'rpg': 3,
                 'apg': 4,
                 'plusmin': 5,

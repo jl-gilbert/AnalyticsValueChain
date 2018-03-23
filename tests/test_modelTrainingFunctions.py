@@ -5,6 +5,7 @@ from develop import modelTrainingFunctions as mTF
 
 
 def test_convert_home_away():
+    """Tests function that converts home/away to binary numeric variable."""
     testframe = pd.DataFrame.from_dict({
             'home_away': ['home', 'home', 'away']})
     mTF.convert_home_away(testframe)
@@ -15,6 +16,7 @@ def test_convert_home_away():
 
 
 def test_extract_predictors():
+    """Tests function that extracts predictor columns from dataframe."""
     testframe = pd.DataFrame.from_dict({
             'pts': [1],
             'rbs': [1],

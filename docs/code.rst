@@ -32,3 +32,13 @@ Updating Daily
    
 .. automodule:: update_db
    :members:
+   
+Unit Tests
+==========
+
+.. automodule:: test_dataPullProcess
+   :members:
+.. automodule:: test_modelTrainingFunctions
+   :members:
+.. automodule:: test_updateFunctions
+   :members:

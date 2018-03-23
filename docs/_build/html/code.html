@@ -626,7 +626,7 @@ converted.</td>
 
 <dl class="function">
 <dt id="modelTrainingFunctions.create_training_data">
-<code class="descclassname">modelTrainingFunctions.</code><code class="descname">create_training_data</code><span class="sig-paren">(</span><em>date=datetime.date(2018</em>, <em>3</em>, <em>18)</em><span class="sig-paren">)</span><a class="headerlink" href="#modelTrainingFunctions.create_training_data" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">modelTrainingFunctions.</code><code class="descname">create_training_data</code><span class="sig-paren">(</span><em>date=datetime.date(2018</em>, <em>3</em>, <em>23)</em><span class="sig-paren">)</span><a class="headerlink" href="#modelTrainingFunctions.create_training_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extracts the rows that will be useful in training a model.</p>
 <p>The function will extract only the games in which the following conditions
 are met: the opponent had played previous games in the season and thus had
@@ -730,7 +730,7 @@ places the return into a pandas dataframe.</p>
 
 <dl class="class">
 <dt id="modelTrainingFunctions.trained_linear_models">
-<em class="property">class </em><code class="descclassname">modelTrainingFunctions.</code><code class="descname">trained_linear_models</code><span class="sig-paren">(</span><em>date=datetime.date(2018</em>, <em>3</em>, <em>18)</em><span class="sig-paren">)</span><a class="headerlink" href="#modelTrainingFunctions.trained_linear_models" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">modelTrainingFunctions.</code><code class="descname">trained_linear_models</code><span class="sig-paren">(</span><em>date=datetime.date(2018</em>, <em>3</em>, <em>23)</em><span class="sig-paren">)</span><a class="headerlink" href="#modelTrainingFunctions.trained_linear_models" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class containing predictive models and the predictions they yield.</p>
 <p>By default, this class will build models using all past data, but a user
 can also use it to reproduce models made in the past.  To do so, the user
@@ -945,6 +945,39 @@ model, or do nothing because there are no upcoming games).</td>
 </dd></dl>
 
 </div>
+<div class="section" id="module-test_dataPullProcess">
+<span id="unit-tests"></span><h1>Unit Tests<a class="headerlink" href="#module-test_dataPullProcess" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="test_dataPullProcess.test_date_to_api">
+<code class="descclassname">test_dataPullProcess.</code><code class="descname">test_date_to_api</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#test_dataPullProcess.test_date_to_api" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests function that converts date object to string for API call.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="test_dataPullProcess.test_extract_lbj_stats">
+<code class="descclassname">test_dataPullProcess.</code><code class="descname">test_extract_lbj_stats</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#test_dataPullProcess.test_extract_lbj_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests function that pulls relevant stats out of json dict.</p>
+</dd></dl>
+
+<span class="target" id="module-test_modelTrainingFunctions"></span><dl class="function">
+<dt id="test_modelTrainingFunctions.test_convert_home_away">
+<code class="descclassname">test_modelTrainingFunctions.</code><code class="descname">test_convert_home_away</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#test_modelTrainingFunctions.test_convert_home_away" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests function that converts home/away to binary numeric variable.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="test_modelTrainingFunctions.test_extract_predictors">
+<code class="descclassname">test_modelTrainingFunctions.</code><code class="descname">test_extract_predictors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#test_modelTrainingFunctions.test_extract_predictors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests function that extracts predictor columns from dataframe.</p>
+</dd></dl>
+
+<span class="target" id="module-test_updateFunctions"></span><dl class="function">
+<dt id="test_updateFunctions.test_reverse_engineer_stats">
+<code class="descclassname">test_updateFunctions.</code><code class="descname">test_reverse_engineer_stats</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#test_updateFunctions.test_reverse_engineer_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests function that finds attempts from makes and percentages.</p>
+</dd></dl>
+
+</div>
 
 
           </div>
@@ -959,6 +992,7 @@ model, or do nothing because there are no upcoming games).</td>
 <li><a class="reference internal" href="#module-modelTrainingFunctions">Training a Predictive Model and Making Predictions</a></li>
 <li><a class="reference internal" href="#module-create_initial_db">Creating Database</a></li>
 <li><a class="reference internal" href="#module-update_db">Updating Daily</a></li>
+<li><a class="reference internal" href="#module-test_dataPullProcess">Unit Tests</a></li>
 </ul>
 <div class="relations">
 <h3>Related Topics</h3>
