@@ -199,7 +199,8 @@ def full_daily_update(today, datapull, database):
         lastgamestats = dppf.extract_lbj_stats(
             lastgamejson['playergamelogs']['gamelogs'][0])
     except:
-        logging.error('Stats from last game not yet available.')
+        logging.error('Stats from last game not yet available. Last updated ' + lastgamejson[
+                'playergamelogs']['lastUpdatedOn'])
     last_game.pts = lastgamestats['Pts']
     last_game.rbs = lastgamestats['Rbs']
     last_game.ast = lastgamestats['Ast']
